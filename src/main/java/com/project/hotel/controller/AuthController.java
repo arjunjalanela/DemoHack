@@ -2,14 +2,17 @@ package com.project.hotel.controller;
 
 import com.project.hotel.dto.LoginRequest;
 import com.project.hotel.dto.RegisterRequest;
+
 import com.project.hotel.service.AuthService;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-
 @RequestMapping("/auth")
-
 @RequiredArgsConstructor
 
 public class AuthController {
@@ -18,19 +21,29 @@ public class AuthController {
 
     @PostMapping("/register")
 
-    public String register(
+    public ResponseEntity<String>
+    register(
+
             @RequestBody RegisterRequest request
     ) {
 
-        return authService.register(request);
+        return ResponseEntity.ok(
+
+                authService.register(request)
+        );
     }
 
     @PostMapping("/login")
 
-    public String login(
+    public ResponseEntity<String>
+    login(
+
             @RequestBody LoginRequest request
     ) {
 
-        return authService.login(request);
+        return ResponseEntity.ok(
+
+                authService.login(request)
+        );
     }
 }
