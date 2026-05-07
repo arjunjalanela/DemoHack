@@ -2,6 +2,7 @@ package com.project.hotel.controller;
 
 import com.project.hotel.dto.BookingRequest;
 
+import com.project.hotel.dto.BookingResponse;
 import com.project.hotel.entity.Booking;
 
 import com.project.hotel.service.BookingService;
@@ -38,7 +39,7 @@ public class BookingController {
 
     @GetMapping("/my")
 
-    public ResponseEntity<List<Booking>>
+    public ResponseEntity<List<BookingResponse>>
     myBookings() {
 
         return ResponseEntity.ok(

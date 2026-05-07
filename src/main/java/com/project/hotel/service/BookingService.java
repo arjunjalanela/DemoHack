@@ -2,6 +2,7 @@ package com.project.hotel.service;
 
 import com.project.hotel.dto.BookingRequest;
 
+import com.project.hotel.dto.BookingResponse;
 import com.project.hotel.entity.Booking;
 import com.project.hotel.entity.Room;
 import com.project.hotel.entity.User;
@@ -91,9 +92,10 @@ public class BookingService {
         return "Room Booked Successfully";
     }
 
-    public List<Booking> myBookings() {
+    public List<BookingResponse> myBookings() {
 
         String email =
+
                 SecurityContextHolder
                         .getContext()
                         .getAuthentication()
@@ -101,10 +103,74 @@ public class BookingService {
 
         User user = userRepository
                 .findByEmail(email)
-                .orElseThrow(() ->
-                        new UserNotFoundException("User Not Found"));
 
-        return bookingRepository.findByUserId(user.getId());
+                .orElseThrow(() ->
+
+                        new UserNotFoundException(
+                                "User Not Found"
+                        )
+                );
+
+        List<Booking> bookings =
+
+                bookingRepository
+                        .findByUserId(user.getId());
+
+        return bookings.stream()
+
+                .map(booking -> {
+
+                    BookingResponse response =
+                            new BookingResponse();
+
+                    response.setBookingId(
+                            booking.getId()
+                    );
+
+                    response.setHotelName(
+
+                            booking.getRoom()
+                                    .getHotel()
+                                    .getName()
+                    );
+
+                    response.setRoomNumber(
+
+                            booking.getRoom()
+                                    .getRoomNumber()
+                    );
+
+                    response.setRoomType(
+
+                            booking.getRoom()
+                                    .getRoomType()
+                    );
+
+                    response.setPrice(
+
+                            booking.getRoom()
+                                    .getPrice()
+                    );
+
+                    response.setCheckIn(
+
+                            booking.getCheckIn()
+                                    .toString()
+                    );
+
+                    response.setCheckOut(
+
+                            booking.getCheckOut()
+                                    .toString()
+                    );
+
+                    response.setStatus(
+                            booking.getStatus()
+                    );
+
+                    return response;
+
+                }).toList();
     }
 
     public String cancelBooking(Long bookingId) {
