@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.
 import org.springframework.stereotype.Component;
 
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.userdetails.
+        UserDetails;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -29,6 +31,9 @@ import java.util.Collections;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final CustomUserDetailsService
+            customUserDetailsService;
+
 
     @Override
 
@@ -61,11 +66,20 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext()
                         .getAuthentication() == null) {
 
+            UserDetails userDetails =
+
+                    customUserDetailsService
+                            .loadUserByUsername(email);
+
             UsernamePasswordAuthenticationToken authToken =
+
                     new UsernamePasswordAuthenticationToken(
-                            email,
+
+                            userDetails,
+
                             null,
-                            Collections.emptyList()
+
+                            userDetails.getAuthorities()
                     );
 
             authToken.setDetails(

@@ -3,6 +3,8 @@ package com.project.hotel.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -21,4 +23,7 @@ public class Hotel {
     private String location;
 
     private Integer totalRooms;
+
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    private List<Room> rooms;
 }

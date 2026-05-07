@@ -1,5 +1,6 @@
 package com.project.hotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,11 +27,11 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-
+    @JsonIgnore
     private Room room;
 }

@@ -9,6 +9,8 @@ import com.project.hotel.security.JwtService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final AuthenticationManager
+            authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -35,7 +39,7 @@ public class AuthService {
                 passwordEncoder.encode(request.getPassword())
         );
 
-        user.setRole("USER");
+        user.setRole("ROLE_USER");
 
         userRepository.save(user);
 
@@ -44,23 +48,18 @@ public class AuthService {
 
     public String login(LoginRequest request) {
 
-        User user = userRepository
-                .findByEmail(request.getEmail())
+        authenticationManager.authenticate(
 
-                .orElseThrow(() ->
-                        new UserNotFoundException("User Not Found"));
+                new UsernamePasswordAuthenticationToken(
 
-        boolean isPasswordCorrect =
-                passwordEncoder.matches(
-                        request.getPassword(),
-                        user.getPassword()
-                );
+                        request.getEmail(),
 
-        if (!isPasswordCorrect) {
+                        request.getPassword()
+                )
+        );
 
-            throw new RuntimeException("Invalid Password");
-        }
-
-        return jwtService.generateToken(user.getEmail());
+        return jwtService.generateToken(
+                request.getEmail()
+        );
     }
 }

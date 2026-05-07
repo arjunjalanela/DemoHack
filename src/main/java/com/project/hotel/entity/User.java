@@ -1,7 +1,10 @@
 package com.project.hotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,4 +28,8 @@ public class User {
     private String password;
 
     private String role;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Booking> bookings;
+
 }
